@@ -1,0 +1,34 @@
+[
+    {
+        "id": 1,
+        "title": "Philadelphia hit roll",
+        "itemsInBox": "6 items",
+        "weight": 180,
+        "price": 30,
+        "imgSrc": "./img/roll/california-hit.jpg"
+    },
+    {
+        "id": 2,
+        "title": "California tempura",
+        "itemsInBox": "6 items",
+        "weight": 205,
+        "price": 25,
+        "imgSrc": "./img/roll/california-tempura.jpg"
+    },
+    {
+        "id": 3,
+        "title": "Baked California roll",
+        "itemsInBox": "6 items",
+        "weight": 182,
+        "price": 20,
+        "imgSrc": "./img/roll/zapech-california.jpg"
+    },
+    {
+        "id": 4,
+        "title": "Philadelphia",
+        "itemsInBox": "6 items",
+        "weight": 230,
+        "price": 35,
+        "imgSrc": "./img/roll/philadelphia.jpg"
+    }
+]
