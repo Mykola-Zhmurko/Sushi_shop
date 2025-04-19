@@ -7,13 +7,10 @@ const productsContainer = document.querySelector('#products-container');
 getProducts()
 
 async function getProducts() {
-    const response = await fetch('./js/products.json');//bekommen products von json//await zwingt zu warten bis alle Produkten bekommen werden
-
-    const productsArray = await response.json();//von json bis zu js//hier await ist wie return, wiedergibt ein Massiv      
-
-    renderProducts(productsArray)
+    const response = await fetch('./js/products.json');
+    const productsArray = await response.json();
+    renderProducts(productsArray, "response with .json()")
 }
-
 
 
 function renderProducts(productsArray){
@@ -51,32 +48,31 @@ function renderProducts(productsArray){
     })
 }
 
-// + oder - der Anzahl
-window.addEventListener('click', function(event){//event ist unser action + or -//mit action bekommen wir value von data-action
+
+window.addEventListener('click', function(event){
     
     let counter;
 
     if(event.target.dataset.action === 'plus' || event.target.dataset.action === 'minus') {
-        const counterWrapper = event.target.closest('.counter-wrapper');//come out Parent from clicked Elem
+        const counterWrapper = event.target.closest('.counter-wrapper');
         counter = counterWrapper.querySelector('[data-counter]');
     }
-    if(event.target.dataset.action === 'plus'){//mit action bekommen wir value von data-action
+    if(event.target.dataset.action === 'plus'){
         counter.innerText = ++counter.innerText;  
     }
 
     if(event.target.dataset.action === 'minus'){ 
-        // verkleinen die Anzahl
         if(parseInt(counter.innerText) > 1){
                 counter.innerText = --counter.innerText;
-            }// überprüfen ob Elem in Korb ist und falls Elem aus Korb entfernen
+            }
             else if(event.target.closest('.cart-wrapper') && parseInt(counter.innerText) === 1){
             event.target.closest('.cart-item').remove();
 
             toggleCartStatus() 
             
-            calcCartPriceAndDelivery()//es ist fürs Rechnen bevor Elem aus Korb entfernt wird
+            calcCartPriceAndDelivery()
         }}
-        // überprüfen ob in Korb ist und rechnen wir noch mal
+
     if(event.target.hasAttribute('data-action') && event.target.closest('.cart-wrapper')){
         calcCartPriceAndDelivery()
     }
@@ -85,15 +81,14 @@ window.addEventListener('click', function(event){//event ist unser action + or -
 
 
 window.addEventListener('click', function(event){
-    // console.log(event.target)//wenn einfech event bekommen wir Svoistva des Elems//wenn event.target dann bekommen wir Elem, der in html ist
     if(event.target.hasAttribute('data-cart')){
         const card = event.target.closest('.card');
 
         const productInfo = {
-            id: card.dataset.id,//bekommen id
-            imgSrc: card.querySelector('.product-img').getAttribute('src'),//miithilfe queryS finden wir IMG//getAttribute() bekommen wir src value von IMG
+            id: card.dataset.id,
+            imgSrc: card.querySelector('.product-img').getAttribute('src'),
             title: card.querySelector('.item-title').innerText,
-            itemsInBox: card.querySelector('[data-items-in-box]').innerText,//amount of sushi
+            itemsInBox: card.querySelector('[data-items-in-box]').innerText,
             weight: card.querySelector('.price__weight').innerText,
             price: card.querySelector('.price__currency').innerText,
             counter: card.querySelector('[data-counter]').innerText,
@@ -101,13 +96,12 @@ window.addEventListener('click', function(event){
 
         const itemInCart = cartWrapper.querySelector(`[data-id="${productInfo.id}"]`);
 
-        if(itemInCart){//machen Items zusammen, wenn in Korb vorhanden, dann einfach +
-            const counterElement = itemInCart.querySelector('[data-counter]');//counter in Korb
-            counterElement.innerText = parseInt(counterElement.innerText) + parseInt(productInfo.counter)//verbinden
+        if(itemInCart){
+            const counterElement = itemInCart.querySelector('[data-counter]');
+            counterElement.innerText = parseInt(counterElement.innerText) + parseInt(productInfo.counter)
         }else{
 
         
-            // die Items in Korb
         const cartItemHTML = `
             <div class="cart-item" data-id="${productInfo.id}">
 								<div class="cart-item__top">
@@ -133,23 +127,21 @@ window.addEventListener('click', function(event){
 								</div>
 							</div>
         `; 
-        cartWrapper.insertAdjacentHTML('beforeend', cartItemHTML)//fügen Schablon (von oben) in sidebar ein
+        cartWrapper.insertAdjacentHTML('beforeend', cartItemHTML)
 
         }
 
         card.querySelector('[data-counter]').innerText= '1'; 
 
 
-        // zeigt Status des Korbes
         toggleCartStatus()
-        // rechnen noch mal ob etwas geändert wurde
+
         calcCartPriceAndDelivery()
     }
 })
 
-// Das Zeigen "der Korb ist leer" und 'bestellen'
 function toggleCartStatus(){
-    const orderForm = document.getElementById('order-form')
+    const orderForm = document.getElementById('order-form');
     const cartWrapper = document.querySelector('.cart-wrapper');
     const cartEmptyBadge = document.querySelector('[data-cart-empty]');
 
@@ -162,23 +154,6 @@ function toggleCartStatus(){
     }
 }
 
-// // rechnen alles zusammen 
-// function calcCartPrice(){
-//     const cartItems = document.querySelectorAll('.cart-item');
-//     const totalPriceEl = document.querySelectorAll('.total-price');
-//     let priceTotal = 0;
-
-//     cartItems.forEach(function (item){
-//         const amountEl = item.querySelector('[data-counter]');
-//         const priceEl = item.querySelector('.price__currency');
-//         const currentPrice = parseInt(amountEl.innerText) * parseInt(priceEl.innerText);
-//         priceTotal += currentPrice;
-//     })  
-//     console.log(priceTotal);
-
-//     totalPriceEl.innerText = priceTotal;
-// }       
-
 function calcCartPriceAndDelivery() {
     const cartWrapper = document.querySelector('.cart-wrapper');
     const priceElements = cartWrapper.querySelectorAll('.price__currency');
@@ -188,22 +163,22 @@ function calcCartPriceAndDelivery() {
     const info = document.querySelector('.small');
     const delivery = 5;
 
-    // Общая стоимость товаров
+    
     let priceTotal = 0;
 
-    // обходим все блоки с ценами в корзине
+    
     priceElements.forEach(function (item) {
-    // Находим количество товара
+    
     const amountEl = item.closest('.cart-item').querySelector('[data-counter]');
-    // Добавляем стоимость товара в общую стоимость (кол-во * цену)
+
     priceTotal += parseInt(item.innerText) * parseInt(amountEl.innerText);
     });
 
-    if(priceTotal <= 50){
+    if(priceTotal < 50){
         priceTotal = priceTotal + parseInt(delivery)        
     }
     if(priceTotal >= 50){
-        priceTotal = priceTotal - parseInt(delivery)
+        priceTotal = priceTotal
     }
     if(priceTotal === parseInt(delivery)){
         priceTotal -= delivery
@@ -219,7 +194,7 @@ function calcCartPriceAndDelivery() {
         info.classList.remove('none');
     }
 
-    if(priceTotal >= 50){
+    if(priceTotal >= 50){   
         deliveryCost.classList.add('free');
         deliveryCost.innerText = 'free'
     }else{
